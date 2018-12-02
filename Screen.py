@@ -28,15 +28,29 @@ def process_img(original_image):
     src2 = np.zeros([h, w, ch], original_image.dtype)
     # original_image = cv2.addWeighted(original_image, 1.2, src2, 1 - 1.2, 5)
     # cv2.imshow('original_image',original_image)
-    processed_img = cv2.cvtColor(original_image, cv2.COLOR_BGR2GRAY)
+
+    # GaussianBlur
+    img = cv2.GaussianBlur(original_image, (5, 5), 0)
+    # convert BGR to HSV
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    # defined the range of a color
+    lower_color = np.array([0, 0, 30])
+    upper_color = np.array([180, 43, 190])
+    # get mask
+    mask = cv2.inRange(hsv, lower_color, upper_color)
+    # get result
+    res = cv2.bitwise_or(img, img, mask=mask)
+
+    processed_img = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY)
     # ret,processed_img =  cv2.threshold(processed_img,0,255,cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
-    processed_img = cv2.Canny(processed_img, threshold1=20, threshold2=130)
+    processed_img = cv2.Canny(processed_img, threshold1=40, threshold2=140)
+    cv2.imshow('processed_img',processed_img)
     processed_img = cv2.GaussianBlur(processed_img, (5,5), 0 )
     vertices = np.array([[10,500],[10,300], [300,200], [500,200], [800,300], [800,500]], np.int32)
     processed_img = roi(processed_img, [vertices])
 
-    #                       edges                          ，未知,最短长度
-    lines = cv2.HoughLinesP(processed_img, 1, np.pi/180, 18, 20, 30)
+    #                       edges                      ，未知,最短长度,最大间断
+    lines = cv2.HoughLinesP(processed_img, 1, np.pi/180,300,10,80,80)
     draw_lines(processed_img,lines)
 
     return processed_img
@@ -45,7 +59,7 @@ def process_img(original_image):
 def main():
     last_time = time.time()
     while(True):
-        screen =  np.array(ImageGrab.grab(bbox=(0,40, 800, 640)))
+        screen =  np.array(ImageGrab.grab(bbox=(0,150, 800, 640)))
         new_screen = process_img(screen)
         print('Loop took {} seconds'.format(time.time()-last_time))
         last_time = time.time()
