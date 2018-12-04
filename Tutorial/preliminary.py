@@ -7,7 +7,22 @@ from numpy import ones, vstack
 from numpy.linalg import lstsq
 from directkeys import PressKey,ReleaseKey,W, A, S, D
 from statistics import mean
+from grabscreen import grab_screen
 
+
+def keys_to_out(keys):
+    #[A,W,D]        A = [1,0,0]
+    output = [0,0,0]
+    if 'A' in keys:
+        output[0] = 1
+    elif 'W' in keys:
+        output[1] = 1
+    else:
+        output[2] = 1
+    return  output
+
+
+"""
 def roi(img, vertices):
     # blank mask:
     mask = np.zeros_like(img)
@@ -41,7 +56,7 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
             for ii in i:
                 ys += [ii[1], ii[3]]
         min_y = min(ys)
-        max_y = 600
+        max_y = 500
         new_lines = []
         line_dict = {}
 
@@ -131,11 +146,12 @@ def process_img(image):
                          ], np.int32)
 
     processed_img = roi(processed_img, [vertices])
+    cv2.imshow('processed_img',processed_img)
     # processed_img = image(processed_img)
 
     # more info: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
     #                                     rho   theta   thresh  min length, max gap:
-    linesdww = cv2.HoughLinesP(processed_img, 1, np.pi / 180, 300, 10, 80, 80)
+    lines = cv2.HoughLinesP(processed_img, 1, np.pi / 180, 300, 10, 80, 80)
 
 
     m1 = 0
@@ -167,8 +183,6 @@ def straight():
     PressKey(W)
     ReleaseKey(A)
     ReleaseKey(D)
-    # PressKey(D)
-    # ReleaseKey(D)
     print(straight)
 
 def left():
@@ -190,15 +204,20 @@ def slow_ya_roll():
     ReleaseKey(A)
     ReleaseKey(D)
     print(slow_ya_roll)
+"""
+
 
 for i in list(range(4))[::-1]:
     print(i+1)
     time.sleep(1)
 
 
+
+
 last_time = time.time()
 while True:
-    screen = np.array(ImageGrab.grab(bbox=(0, 150, 800, 640)))
+    # screen = np.array(ImageGrab.grab(bbox=(0, 150, 800, 640)))
+    screen = grab_screen(region=(0, 150, 800, 640))
     print('Frame took {} seconds'.format(time.time() - last_time))
     last_time = time.time()
     new_screen, original_image,m1,m2 = process_img(screen)
