@@ -5,21 +5,8 @@ import time
 import pyautogui
 from numpy import ones, vstack
 from numpy.linalg import lstsq
-from directkeys import PressKey,ReleaseKey,W, A, S, D
 from statistics import mean
 from grabscreen import grab_screen
-
-
-def keys_to_out(keys):
-    #[A,W,D]        A = [1,0,0]
-    output = [0,0,0]
-    if 'A' in keys:
-        output[0] = 1
-    elif 'W' in keys:
-        output[1] = 1
-    else:
-        output[2] = 1
-    return  output
 
 def road(image):
     big = image
@@ -130,20 +117,49 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
         print(str(e))
 
 def process_img(image):
-    original_image = road(image)
-    cv2.imshow('original_image',original_image)
-    # convert to gray
-    processed_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    vertices1 = np.array([[390, 310], [400, 310], [400, 330], [390, 330]
+                         ], np.int32)
+    image1 = roi(image, [vertices1])
+
+    small_hsv = cv2.cvtColor(image1,cv2.COLOR_BGR2HSV)
+    h, s, v = cv2.split(small_hsv)
+    # min_h = np.min(h)
+
+#   提取路面中的车道线条
+    original_image = image
+    big_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+    # lower_hsv = np.array([10, 0, 35])
+    # upper_hsv = np.array([75, 45, 70])
+    lower_hsv = np.array([np.min(h),np.min(s),np.min(v)])
+    upper_hsv = np.array([np.max(h),np.max(s),np.max(v)])
+    mask = cv2.inRange(big_hsv, lower_hsv, upper_hsv)
+    dest = cv2.bitwise_and(big_hsv, big_hsv, mask=mask)
+    dest = cv2.cvtColor(dest, cv2.COLOR_HSV2BGR)
+    # 转灰度
+    dest = cv2.cvtColor(dest, cv2.COLOR_BGR2GRAY)
+    # 二值化
+    ret, binary = cv2.threshold(dest, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+    # 形态学操作     腐蚀
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 1))
+    # dest = cv2.erode(dest, kernel)
+    dest = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)  # 去除小的干扰块
+    cv2.imshow('original_image',dest)
+
+    processed_img = dest
     # edge detection
     # processed_img = cv2.Canny(processed_img, threshold1=40, threshold2=140)
     processed_img = cv2.GaussianBlur(processed_img, (5, 5), 0)
     vertices = np.array([[10, 500], [10, 300], [300, 200], [500, 200], [800, 300], [800, 500],
-                         ], np.int32)
+                      ], np.int32)
     processed_img = roi(processed_img, [vertices])
     cv2.imshow('processed_img',processed_img)
     # more info: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
     #                                     rho   theta   thresh  min length, max gap:
-    lines = cv2.HoughLinesP(processed_img, 1, np.pi / 180, 300, 10, 80, 80)
+    # processed_img = cv2.cvtColor(image)
+
+#   processed_img是RGB(CV_8UC1)需要CV_8UC3格式
+    lines = cv2.HoughLinesP(dest, 1, np.pi / 180, 300, 10, 80, 80)
+
     m1 = 0
     m2 = 0
     try:
@@ -165,54 +181,18 @@ def process_img(image):
     return processed_img, original_image,m1,m2
 
 
-def straight():
-    PressKey(W)
-    ReleaseKey(A)
-    ReleaseKey(D)
-    print(straight)
-def left():
-    PressKey(A)
-    ReleaseKey(W)
-    ReleaseKey(D)
-    # ReleaseKey(A)
-    print(left)
-def right():
-    PressKey(D)
-    ReleaseKey(A)
-    ReleaseKey(W)
-    # ReleaseKey(D)
-    print(right)
-def slow_ya_roll():
-    ReleaseKey(W)
-    ReleaseKey(A)
-    ReleaseKey(D)
-    print(slow_ya_roll)
-
-
-
-for i in list(range(4))[::-1]:
-    print(i+1)
-    time.sleep(1)
-
-
 
 
 last_time = time.time()
 while True:
     # screen = np.array(ImageGrab.grab(bbox=(0, 150, 800, 640)))
     screen = grab_screen(region=(0, 150, 800, 640))
+    # srceen_small = grab_screen(region=(0, 150, 20, 20))
     print('Frame took {} seconds'.format(time.time() - last_time))
     last_time = time.time()
     new_screen, original_image,m1,m2 = process_img(screen)
     # cv2.imshow('window', new_screen)
     cv2.imshow('window2', cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB))
-
-    if m1 < 0 and m2 < 0:
-        right()
-    elif m1 > 0 and m2 > 0:
-        left()
-    else:
-        straight()
 
     # cv2.imshow('window',cv2.cvtColor(screen, cv2.COLOR_BGR2RGB))
     if cv2.waitKey(25) & 0xFF == ord('q'):

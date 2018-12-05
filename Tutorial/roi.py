@@ -15,9 +15,11 @@ def image(img):
     mask = cv2.inRange(hsv, lower_color, upper_color)
     #get result
     res = cv2.bitwise_or(img, img, mask= mask)
+    # res = cv2.cvtColor(res, cv2.COLOR_HSV2BGR)
+    # res = cv2.cvtColor(res, cv2.COLOR_BGR2GRAY)
 
-    # cv2.imshow('res',res)
-    return  res
+    cv2.imshow('res',res)
+    # return  res
     """
     #Because cv2's color system is BGR, but matplotlib's color system is RGB,
     #must convert BGR to RGB
@@ -41,11 +43,11 @@ def image(img):
     plt.show()
     """
 
-#read image
-# img = cv2.imread("C:/1/1111.png")
-#
-# cv2.namedWindow('res', cv2.WINDOW_AUTOSIZE)
-# image(img)
-#
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+# read image
+img = cv2.imread("C:/1/1111.png")
+
+cv2.namedWindow('res', cv2.WINDOW_AUTOSIZE)
+image(img)
+
+cv2.waitKey(0)
+cv2.destroyAllWindows()
