@@ -1,6 +1,7 @@
+
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
+
 
 #直方图反向投影
 

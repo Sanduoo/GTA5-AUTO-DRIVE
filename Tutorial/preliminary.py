@@ -21,26 +21,6 @@ def keys_to_out(keys):
         output[2] = 1
     return  output
 
-def road(image):
-    big = image
-    big = cv2.GaussianBlur(big, (5, 5), 0)
-    big_hsv = cv2.cvtColor(big, cv2.COLOR_BGR2HSV)
-    lower_hsv = np.array([24, 14, 51])
-    upper_hsv = np.array([60, 28, 54])
-    mask = cv2.inRange(big_hsv, lower_hsv, upper_hsv)
-    dest = cv2.bitwise_and(big_hsv, big_hsv, mask=mask)
-    dest = cv2.cvtColor(dest, cv2.COLOR_HSV2BGR)
-    # 转灰度
-    dest = cv2.cvtColor(dest, cv2.COLOR_BGR2GRAY)
-    # 二值化
-    ret, binary = cv2.threshold(dest, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
-    # 形态学操作     腐蚀
-    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (6, 6))
-    dest = cv2.morphologyEx(binary, cv2.MORPH_OPEN, kernel)  # 去除小的干扰块
-
-    return cv2.cvtColor(dest,cv2.COLOR_GRAY2BGR)
-
-
 
 def roi(img, vertices):
     # blank mask:
@@ -130,12 +110,12 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
         print(str(e))
 
 def process_img(image):
-    original_image = road(image)
+    original_image = image
     cv2.imshow('original_image',original_image)
     # convert to gray
     processed_img = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     # edge detection
-    # processed_img = cv2.Canny(processed_img, threshold1=40, threshold2=140)
+    processed_img = cv2.Canny(processed_img, threshold1=40, threshold2=140)
     processed_img = cv2.GaussianBlur(processed_img, (5, 5), 0)
     vertices = np.array([[10, 500], [10, 300], [300, 200], [500, 200], [800, 300], [800, 500],
                          ], np.int32)
