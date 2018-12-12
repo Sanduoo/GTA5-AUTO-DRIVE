@@ -1,0 +1,66 @@
+[33mcommit 87d789c79b6c26d89ea1ec1b8924111512e758c0[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m)[m
+Author: SanDuoo <1753095190@qq.com>
+Date:   Wed Dec 12 09:11:54 2018 +0800
+
+    12-11
+
+[33mcommit 90de7c3d34e943095b8a1d0105777c0504e53702[m
+Author: SanDuoo <1753095190@qq.com>
+Date:   Tue Dec 11 22:22:46 2018 +0800
+
+    12-11
+
+[33mcommit 9d2a11e366a90698d2d13cfe8e03815e12a04021[m[33m ([m[1;31morigin/master[m[33m)[m
+Author: SanDuoo <1753095190@qq.com>
+Date:   Fri Dec 7 20:56:24 2018 +0800
+
+    12-07
+
+[33mcommit 4ccf2340480d06e9832b54e392a2717d56a61b78[m
+Author: SanDuo <1753095190@qq.com>
+Date:   Wed Dec 5 22:21:22 2018 +0800
+
+    Update README.md
+
+[33mcommit b0bb90470f3cfb6ee9785c69b20dd9e697b4dfef[m
+Author: SanDuo <1753095190@qq.com>
+Date:   Wed Dec 5 22:21:06 2018 +0800
+
+    Update README.md
+
+[33mcommit ec1b8af6ed1f35cb7844225704091cdb3fa70ee4[m
+Merge: e521d13 067b52a
+Author: SanDuoo <1753095190@qq.com>
+Date:   Wed Dec 5 22:14:27 2018 +0800
+
+    重写了车道识别方案，大大的提高了准确度
+
+[33mcommit e521d13dd5f569115b7f7304e37c7b84fc76f7f6[m
+Author: SanDuoo <1753095190@qq.com>
+Date:   Wed Dec 5 22:07:59 2018 +0800
+
+    重写了车道识别方案，大大的提高了准确度
+
+[33mcommit 067b52a8484505d4d1a614a5085afb6ba2704ace[m
+Author: SanDuo <1753095190@qq.com>
+Date:   Tue Dec 4 21:26:00 2018 +0800
+
+    Update README.md
+
+[33mcommit 2e5c9cb54fea48ffa5893ba6dedd2495da35db49[m
+Author: SanDuoo <1753095190@qq.com>
+Date:   Tue Dec 4 21:18:52 2018 +0800
+
+    重新整理了代码，建立神经训练文件
+
+[33mcommit b99167476ab1c54dd9cca80079eda4d51d542be9[m
+Author: SanDuoo <1753095190@qq.com>
+Date:   Sun Dec 2 20:51:57 2018 +0800
+
+    车道处理
+
+[33mcommit b7b28bc51222df6c9ce6f8c1b64f238ec9a7c407[m
+Author: SanDuoo <1753095190@qq.com>
+Date:   Sat Dec 1 20:51:26 2018 +0800
+
+    1
