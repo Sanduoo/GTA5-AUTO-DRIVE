@@ -30,7 +30,7 @@ def draw_lanes(img, lines, color=[0, 255, 255], thickness=3):
             for ii in i:
                 ys += [ii[1], ii[3]]
         min_y = min(ys)
-        max_y = 500
+        max_y = 600
         new_lines = []
         line_dict = {}
         for idx, i in enumerate(lines):
@@ -100,20 +100,24 @@ def process_img(image):
     vertices = np.array([[10, 500], [10, 300], [300, 200], [500, 200], [800, 300], [800, 500],
                       ], np.int32)
     processed_img = roi(processed_img, [vertices])
+
+    processed_img = cv2.Canny(processed_img, threshold1=40, threshold2=140)
+    # processed_img = cv2.GaussianBlur(processed_img, (5, 5), 0)
+    # processed_img = cv2.medianBlur(processed_img, 5)
     cv2.imshow('processed_img',processed_img)
     # more info: http://docs.opencv.org/3.0-beta/doc/py_tutorials/py_imgproc/py_houghlines/py_houghlines.html
-    #                                     rho   theta   thresh  min length, max gap:
+    #                                        rho,        theta, thresh, min length, max gap:
     # processed_img = cv2.cvtColor(image)
 
-#   processed_img是RGB(CV_8UC1)需要CV_8UC3格式
-    lines = cv2.HoughLinesP(dest, 1, np.pi / 180, 300, 10, 80, 80)
+    # processed_img 是 RGB( CV_8UC1 )需要CV_8UC3格式
+    lines = cv2.HoughLinesP(processed_img, 1,np.pi / 180,  300,   10,       100,         50)
 
     m1 = 0
     m2 = 0
     try:
-        l1, l2,m1,m2 = draw_lanes(original_image, lines)
-        cv2.line(original_image, (l1[0], l1[1]), (l1[2], l1[3]), [0, 255, 0], 30)
-        cv2.line(original_image, (l2[0], l2[1]), (l2[2], l2[3]), [0, 255, 0], 30)
+        l1, l2,m1,m2 = draw_lanes(processed_img, lines)
+        cv2.line(processed_img, (l1[0], l1[1]), (l1[2], l1[3]), [0, 255, 0], 30)
+        cv2.line(processed_img, (l2[0], l2[1]), (l2[2], l2[3]), [0, 255, 0], 30)
     except Exception as e:
         print(str(e))
         pass

@@ -102,3 +102,11 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Preliminary
+Preliminary/log/
+*.npy
+/Preliminary/py-car-0.001-alexnetv2-8-epochs.model.data-00000-of-00001
+/Preliminary/py-car-0.001-alexnetv2-8-epochs.model.index
+/Preliminary/py-car-0.001-alexnetv2-8-epochs.model.meta
+/Preliminary/checkpoint

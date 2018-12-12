@@ -6,7 +6,7 @@ import cv2
 
 #纠错
 
-train_data = np.load('tranining_data.npy')
+train_data = np.load('training_data.npy')
 print(len(train_data))
 
 df = pd.DataFrame(train_data)
@@ -44,7 +44,7 @@ final_data = forwards + lefts +rights
 
 shuffle(final_data)
 print(len(final_data))
-np.save('tranining_data.npy',final_data)
+np.save('training_data_v2.npy',final_data)
 
 
 # for data in train_data:
